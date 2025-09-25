@@ -92,6 +92,10 @@ export const translations = {
     'about.vision.desc': 'To be the leading software development company in the region, empowering businesses through innovative technology solutions.',
     'about.mission.title': 'Our Mission',
     'about.mission.desc': 'We strive to deliver exceptional software solutions that exceed our clients\' expectations while fostering long-term partnerships.',
+    'about.stats.projects': 'Completed Projects',
+    'about.stats.clients': 'Happy Clients',
+    'about.stats.years': 'Years Experience',
+    'about.stats.support': 'Support',
     
     // Testimonials
     'testimonials.title': 'What Our Clients Say',
@@ -183,6 +187,10 @@ export const translations = {
     'about.vision.desc': 'أن نكون الشركة الرائدة في تطوير البرمجيات في المنطقة، وتمكين الشركات من خلال حلول تقنية مبتكرة.',
     'about.mission.title': 'مهمتنا',
     'about.mission.desc': 'نسعى لتقديم حلول برمجية استثنائية تتجاوز توقعات عملائنا مع تعزيز الشراكات طويلة المدى.',
+    'about.stats.projects': 'مشروع مكتمل',
+    'about.stats.clients': 'عميل راضٍ',
+    'about.stats.years': 'سنوات خبرة',
+    'about.stats.support': 'دعم',
     
     // Testimonials
     'testimonials.title': 'آراء عملائنا',
