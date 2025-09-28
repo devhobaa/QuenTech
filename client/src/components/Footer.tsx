@@ -30,7 +30,7 @@ export function Footer({ onNavigate }: FooterProps) {
           <div className="space-y-4">
             <div className={`flex items-center ${language === 'ar' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
               <div className="text-2xl font-bold text-primary">
-                <i className="fas fa-code"></i>
+                <img src="/logo.webp" alt="QuenTech Logo" className="w-8 h-8" />
               </div>
               <span className="text-xl font-bold text-foreground">QuenTech</span>
             </div>

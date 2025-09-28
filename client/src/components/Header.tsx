@@ -31,7 +31,7 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
             data-testid="link-home"
           >
             <div className="text-2xl font-bold text-primary">
-              <i className="fas fa-code"></i>
+              <img src="/logo.webp" alt="QuenTech Logo" className="w-8 h-8" />
             </div>
             <span className="text-xl font-bold text-foreground">QuenTech</span>
           </div>
