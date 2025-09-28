@@ -83,7 +83,7 @@ export function OrderForm({ onNavigate, selectedServiceType }: OrderFormProps) {
       const whatsappMessage = createWhatsAppMessage(data);
       
       // Open WhatsApp with the message
-      const whatsappUrl = `https://wa.me/966501234567?text=${encodeURIComponent(whatsappMessage)}`;
+      const whatsappUrl = `https://wa.me/201026897739?text=${encodeURIComponent(whatsappMessage)}`;
       window.open(whatsappUrl, '_blank');
       
       // Show success message

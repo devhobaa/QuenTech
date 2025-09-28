@@ -115,6 +115,13 @@ export function Footer({ onNavigate }: FooterProps) {
             ))}
           </div>
         </div>
+
+        {/* Developer Credit */}
+        <div className="border-t border-border mt-6 pt-6 text-center">
+          <p className={`text-sm text-muted-foreground ${language === 'ar' ? 'font-arabic' : ''}`}>
+            Made with <span className="text-red-500">❤️</span> by <span className="text-primary font-semibold">Ehab Hussein</span>
+          </p>
+        </div>
       </div>
     </footer>
   );
