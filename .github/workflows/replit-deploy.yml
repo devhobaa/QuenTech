@@ -1,0 +1,43 @@
+name: Deploy to Replit
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Clear all caches
+        run: |
+          rm -rf dist/
+          rm -rf node_modules/.cache/
+          rm -rf .vite/
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build application
+        run: npm run build
+        
+      - name: Create .nojekyll file
+        run: |
+          touch dist/public/.nojekyll
+          echo "Created .nojekyll file"
+        
+      - name: Deploy to Replit
+        run: |
+          echo "Build completed successfully!"
+          echo "Files built in dist/public/"
+          echo "Ready for Replit deployment"
+          ls -la dist/public/
