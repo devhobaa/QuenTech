@@ -10,8 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
 
 const orderSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -32,7 +30,6 @@ interface OrderFormProps {
 export function OrderForm({ onNavigate, selectedServiceType }: OrderFormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const form = useForm<OrderFormData>({
@@ -64,47 +61,41 @@ export function OrderForm({ onNavigate, selectedServiceType }: OrderFormProps) {
     { value: 'custom', label: t('services.custom.title') },
   ];
 
-  const submitOrderMutation = useMutation({
-    mutationFn: async (data: OrderFormData) => {
-      const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('email', data.email);
-      formData.append('phone', data.phone);
-      formData.append('serviceType', data.serviceType);
-      formData.append('description', data.description);
+  const createWhatsAppMessage = (data: OrderFormData) => {
+    return `🎯 *طلب خدمة جديد من موقع QuenTech*
+
+👤 *الاسم:* ${data.name}
+📧 *البريد الإلكتروني:* ${data.email}
+📱 *رقم الهاتف:* ${data.phone}
+🛠️ *نوع الخدمة:* ${data.serviceType}
+📝 *الوصف:* ${data.description}
+
+📅 *تاريخ الطلب:* ${new Date().toLocaleDateString('ar-SA')}
+⏰ *وقت الطلب:* ${new Date().toLocaleTimeString('ar-SA')}
+
+---
+*شكراً لاختيارك QuenTech للبرمجيات* 🚀`;
+  };
+
+  const submitOrderMutation = {
+    mutate: async (data: OrderFormData) => {
+      // Create WhatsApp message
+      const whatsappMessage = createWhatsAppMessage(data);
       
-      if (uploadedFile) {
-        formData.append('file', uploadedFile);
-      }
+      // Open WhatsApp with the message
+      const whatsappUrl = `https://wa.me/966501234567?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappUrl, '_blank');
       
-      const response = await fetch('/api/order', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to submit order');
-      }
-      
-      return response.json();
-    },
-    onSuccess: () => {
+      // Show success message
       toast({
         title: t('order.success'),
-        description: 'Our team will review your requirements and contact you within 24 hours.',
+        description: 'تم فتح الواتساب لإرسال طلبك. شكراً لك!',
       });
+      
       form.reset();
       setUploadedFile(null);
-      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-    },
-    onError: () => {
-      toast({
-        variant: 'destructive',
-        title: t('order.error'),
-        description: 'Please try again or contact us directly.',
-      });
-    },
-  });
+    }
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -115,7 +106,7 @@ export function OrderForm({ onNavigate, selectedServiceType }: OrderFormProps) {
   };
 
   const onSubmit = (data: OrderFormData) => {
-    console.log('Order form submitted:', data); // TODO: remove mock functionality
+    console.log('Order form submitted:', data);
     submitOrderMutation.mutate(data);
   };
 
@@ -293,20 +284,10 @@ export function OrderForm({ onNavigate, selectedServiceType }: OrderFormProps) {
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-primary to-chart-2 hover:from-primary/90 hover:to-chart-2/90 font-semibold py-3 text-lg"
-                    disabled={submitOrderMutation.isPending}
                     data-testid="button-order-submit"
                   >
-                    {submitOrderMutation.isPending ? (
-                      <>
-                        <i className="fas fa-spinner fa-spin mr-2"></i>
-                        {t('order.submitting') || 'Submitting...'}
-                      </>
-                    ) : (
-                      <>
-                        <i className="fas fa-rocket mr-2"></i>
-                        {t('order.submit')}
-                      </>
-                    )}
+                    <i className="fab fa-whatsapp mr-2"></i>
+                    {t('order.submit')}
                   </Button>
                 </form>
               </Form>

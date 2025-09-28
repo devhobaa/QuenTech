@@ -7,7 +7,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { useLanguage } from "@/lib/i18n";
 import { useScrollAnimation, useScrollAnimationMultiple } from "@/hooks/use-scroll-animation";
-import { useAuth } from "@/hooks/use-auth";
 import NotFound from "@/pages/not-found";
 
 // Import working components
@@ -16,11 +15,8 @@ import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { WhyUs } from "@/components/WhyUs";
 import { Footer } from "@/components/Footer";
-import { AdminDashboard } from "./components/AdminDashboard";
-import { AdminLogin } from "./components/AdminLogin";
 import { OrderForm } from "./components/OrderForm";
 import { AboutUs } from "./components/AboutUs";
-import { ContactInfo } from "./components/ContactInfo";
 import { WhatsAppButton } from "./components/WhatsAppButton";
 
 // Bilingual components with proper i18n integration  
@@ -295,10 +291,9 @@ function HomePage({ onNavigate, currentPage, orderParams }: { onNavigate: (page:
 function Router() {
   const [currentPage, setCurrentPage] = useState('home');
   const [orderParams, setOrderParams] = useState<any>(null);
-  const { isAuthenticated, isLoading, login, logout } = useAuth();
   
   // Define valid pages
-  const validPages = ['home', 'services', 'about', 'contact', 'order', 'admin'];
+  const validPages = ['home', 'services', 'about', 'contact', 'order'];
   
   // Define valid file extensions that should not trigger 404
   const validFileExtensions = ['.js', '.css', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot'];
@@ -439,34 +434,14 @@ function Router() {
     };
   }, []);
 
-  // Check if current page is admin
-  const isAdminPage = currentPage === 'admin';
-  
-  console.log('Router state:', { currentPage, isAdminPage, isAuthenticated, isLoading });
+  console.log('Router state:', { currentPage });
 
-  // Show loading spinner while checking authentication
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <i className="fas fa-spinner fa-spin text-primary text-4xl mb-4"></i>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
-      {!isAdminPage && currentPage !== '404' && <Header onNavigate={handleNavigate} currentPage={currentPage} />}
+      {currentPage !== '404' && <Header onNavigate={handleNavigate} currentPage={currentPage} />}
       <main className="min-h-screen">
-        {currentPage === 'admin' ? (
-          isAuthenticated ? (
-            <AdminDashboard onNavigate={handleNavigate} onLogout={logout} />
-          ) : (
-            <AdminLogin onLogin={login} />
-          )
-        ) : currentPage === '404' ? (
+        {currentPage === '404' ? (
           <NotFound onNavigate={handleNavigate} />
         ) : (
           <HomePage onNavigate={handleNavigate} currentPage={currentPage} orderParams={orderParams} />

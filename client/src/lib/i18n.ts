@@ -79,9 +79,9 @@ export const translations = {
     'order.description': 'Project Description',
     'order.description.placeholder': 'Describe your project requirements...',
     'order.file': 'Upload Files (Optional)',
-    'order.submit': 'Submit Order',
-    'order.success': 'Order submitted successfully! We will contact you soon.',
-    'order.error': 'Failed to submit order. Please try again.',
+    'order.submit': 'Send via WhatsApp',
+    'order.success': 'Order sent successfully! WhatsApp will open to send your request.',
+    'order.error': 'Failed to send order. Please try again.',
     
     // About
     'about.title': 'About QuenTech',
@@ -192,8 +192,8 @@ export const translations = {
     'order.description': 'وصف المشروع',
     'order.description.placeholder': 'اوصف متطلبات مشروعك...',
     'order.file': 'رفع ملفات (اختياري)',
-    'order.submit': 'إرسال الطلب',
-    'order.success': 'تم إرسال الطلب بنجاح! سنتواصل معك قريباً.',
+    'order.submit': 'إرسال عبر الواتساب',
+    'order.success': 'تم إرسال الطلب بنجاح! سيتم فتح الواتساب لإرسال طلبك.',
     'order.error': 'فشل في إرسال الطلب. يرجى المحاولة مرة أخرى.',
     
     // About
