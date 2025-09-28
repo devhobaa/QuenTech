@@ -13,4 +13,5 @@ await registerRoutes(app);
 // Serve static files in production
 serveStatic(app);
 
+// Export for Vercel
 export default app;
