@@ -7,11 +7,22 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Register API routes
-await registerRoutes(app);
+// Initialize routes asynchronously
+let routesInitialized = false;
 
-// Serve static files in production
-serveStatic(app);
+const initializeRoutes = async () => {
+  if (!routesInitialized) {
+    await registerRoutes(app);
+    serveStatic(app);
+    routesInitialized = true;
+  }
+};
+
+// Handle all routes
+app.use(async (req, res, next) => {
+  await initializeRoutes();
+  next();
+});
 
 // Export for Vercel
 export default app;
