@@ -22,7 +22,7 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>;
 
 export function ContactForm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -38,10 +38,7 @@ export function ContactForm() {
 
   const submitContactMutation = useMutation({
     mutationFn: async (data: ContactFormData) => {
-      return apiRequest('/api/contacts', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return apiRequest('POST', '/api/contact', data);
     },
     onSuccess: () => {
       toast({
@@ -66,42 +63,46 @@ export function ContactForm() {
   };
 
   return (
-    <section className=\"py-20 bg-gradient-to-br from-background to-muted/30\">
-      <div className=\"container mx-auto px-4\">
-        <div className=\"max-w-2xl mx-auto\">
+    <section className="py-20 bg-background">
+      <div className="container mx-auto px-4">
+        <div className="max-w-2xl mx-auto">
           {/* Section Header */}
-          <div className=\"text-center mb-12\" data-aos=\"fade-up\">
-            <h2 className=\"text-3xl md:text-4xl font-bold text-foreground mb-4\">
-              {t('contact.title')}
-            </h2>
-            <p className=\"text-lg text-muted-foreground\">
-              {t('contact.subtitle')}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center mb-4">
+              <i className="fas fa-star text-primary text-sm mr-2"></i>
+              <h2 className={`text-3xl md:text-4xl font-bold text-foreground ${language === 'ar' ? 'font-arabic' : ''}`}>
+                {language === 'ar' ? 'تواصل معنا' : 'Contact Us'}
+              </h2>
+              <i className="fas fa-star text-primary text-sm ml-2"></i>
+            </div>
+            <p className={`text-lg text-muted-foreground ${language === 'ar' ? 'font-arabic' : ''}`}>
+              {language === 'ar' ? 'نحن هنا لمساعدتك. تواصل معنا وسنرد عليك في أقرب وقت ممكن' : 'We are here to help you. Contact us and we will get back to you as soon as possible'}
             </p>
           </div>
 
           {/* Contact Form */}
-          <Card className=\"border-border shadow-lg\" data-aos=\"fade-up\" data-aos-delay=\"200\">
+          <Card className="bg-card border-border shadow-lg">
             <CardHeader>
-              <CardTitle className=\"text-center text-xl text-foreground\">
-                <i className=\"fas fa-envelope mr-2 text-primary\"></i>
-                {t('contact.title')}
+              <CardTitle className={`text-center text-xl text-foreground ${language === 'ar' ? 'font-arabic' : ''}`}>
+                <i className={`fas fa-envelope ${language === 'ar' ? 'ml-2' : 'mr-2'} text-primary`}></i>
+                {language === 'ar' ? 'تواصل معنا' : 'Contact Us'}
               </CardTitle>
             </CardHeader>
-            <CardContent className=\"p-8\">
+            <CardContent className="p-8">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className=\"space-y-6\">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   {/* Name Field */}
                   <FormField
                     control={form.control}
-                    name=\"name\"
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('contact.name')}</FormLabel>
+                        <FormLabel>{language === 'ar' ? 'الاسم' : 'Name'}</FormLabel>
                         <FormControl>
                           <Input 
                             {...field} 
-                            className=\"border-input\"
-                            data-testid=\"input-contact-name\"
+                            className="border-input"
+                            data-testid="input-contact-name"
                           />
                         </FormControl>
                         <FormMessage />
@@ -112,16 +113,16 @@ export function ContactForm() {
                   {/* Email Field */}
                   <FormField
                     control={form.control}
-                    name=\"email\"
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('contact.email')}</FormLabel>
+                        <FormLabel>{language === 'ar' ? 'البريد الإلكتروني' : 'Email'}</FormLabel>
                         <FormControl>
                           <Input 
                             {...field} 
-                            type=\"email\"
-                            className=\"border-input\"
-                            data-testid=\"input-contact-email\"
+                            type="email"
+                            className="border-input"
+                            data-testid="input-contact-email"
                           />
                         </FormControl>
                         <FormMessage />
@@ -132,16 +133,16 @@ export function ContactForm() {
                   {/* Phone Field */}
                   <FormField
                     control={form.control}
-                    name=\"phone\"
+                    name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('contact.phone')}</FormLabel>
+                        <FormLabel>{language === 'ar' ? 'رقم الهاتف' : 'Phone'}</FormLabel>
                         <FormControl>
                           <Input 
                             {...field} 
-                            type=\"tel\"
-                            className=\"border-input\"
-                            data-testid=\"input-contact-phone\"
+                            type="tel"
+                            className="border-input"
+                            data-testid="input-contact-phone"
                           />
                         </FormControl>
                         <FormMessage />
@@ -152,16 +153,16 @@ export function ContactForm() {
                   {/* Message Field */}
                   <FormField
                     control={form.control}
-                    name=\"message\"
+                    name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('contact.message')}</FormLabel>
+                        <FormLabel>{language === 'ar' ? 'الرسالة' : 'Message'}</FormLabel>
                         <FormControl>
                           <Textarea 
                             {...field} 
                             rows={5}
-                            className=\"border-input resize-none\"
-                            data-testid=\"textarea-contact-message\"
+                            className="border-input resize-none"
+                            data-testid="textarea-contact-message"
                           />
                         </FormControl>
                         <FormMessage />
@@ -170,24 +171,24 @@ export function ContactForm() {
                   />
 
                   {/* Submit Button */}
-                  <Button
-                    type=\"submit\"
-                    className=\"w-full bg-gradient-to-r from-primary to-chart-2 hover:from-primary/90 hover:to-chart-2/90 font-semibold py-3\"
-                    disabled={submitContactMutation.isPending}
-                    data-testid=\"button-contact-submit\"
-                  >
-                    {submitContactMutation.isPending ? (
-                      <>
-                        <i className=\"fas fa-spinner fa-spin mr-2\"></i>
-                        {t('contact.sending') || 'Sending...'}
-                      </>
-                    ) : (
-                      <>
-                        <i className=\"fas fa-paper-plane mr-2\"></i>
-                        {t('contact.submit')}
-                      </>
-                    )}
-                  </Button>
+                      <Button
+                        type="submit"
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-3"
+                        disabled={submitContactMutation.isPending}
+                        data-testid="button-contact-submit"
+                      >
+                        {submitContactMutation.isPending ? (
+                          <>
+                            <i className={`fas fa-spinner fa-spin ${language === 'ar' ? 'ml-2' : 'mr-2'}`}></i>
+                            {language === 'ar' ? 'جاري الإرسال...' : 'Sending...'}
+                          </>
+                        ) : (
+                          <>
+                            <i className={`fas fa-paper-plane ${language === 'ar' ? 'ml-2' : 'mr-2'}`}></i>
+                            {language === 'ar' ? 'إرسال الرسالة' : 'Send Message'}
+                          </>
+                        )}
+                      </Button>
                 </form>
               </Form>
             </CardContent>

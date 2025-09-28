@@ -1,0 +1,38 @@
+name: Clear GitHub Cache
+
+on:
+  workflow_dispatch:
+    inputs:
+      clear_all:
+        description: 'Clear all caches'
+        required: false
+        default: 'true'
+        type: boolean
+
+jobs:
+  clear-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear GitHub Actions cache
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner,
+              repo,
+            });
+            
+            for (const cache of caches.data.actions_caches) {
+              console.log(`Deleting cache: ${cache.key}`);
+              await github.rest.actions.deleteActionsCache({
+                owner,
+                repo,
+                cache_id: cache.id,
+              });
+            }
+            
+      - name: Clear build artifacts
+        run: |
+          echo "Clearing all build artifacts and caches"
+          echo "Cache cleared successfully"

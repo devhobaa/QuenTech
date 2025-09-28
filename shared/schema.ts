@@ -29,6 +29,17 @@ export const orders = pgTable("orders", {
   createdAt: timestamp("created_at").default(sql`now()`).notNull(),
 });
 
+export const testimonials = pgTable("testimonials", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  role: text("role").notNull(),
+  text: text("text").notNull(),
+  rating: text("rating").notNull().default("5"),
+  imageUrl: text("image_url"),
+  isActive: text("is_active").notNull().default("true"),
+  createdAt: timestamp("created_at").default(sql`now()`).notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -44,9 +55,16 @@ export const insertOrderSchema = createInsertSchema(orders).omit({
   createdAt: true,
 });
 
+export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
 export type Contact = typeof contacts.$inferSelect;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof orders.$inferSelect;
+export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
+export type Testimonial = typeof testimonials.$inferSelect;

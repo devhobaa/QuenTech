@@ -113,6 +113,24 @@ export const translations = {
     'footer.contact.short': 'Contact Info',
     'footer.social': 'Follow Us',
     'footer.rights': '© 2024 QuenTech. All rights reserved.',
+    'footer.company.desc': 'QuenTech is a professional software company specializing in web development, mobile apps, and custom solutions',
+    'footer.services.mobile': 'Mobile Applications',
+    'footer.services.desktop': 'Desktop Applications',
+    'footer.services.websites': 'Websites',
+    'footer.services.design': 'UI & Web Design',
+    'footer.contact.title': 'Contact Us',
+    'footer.contact.location': 'Tanta, Egypt',
+    
+    // 404 Error Page
+    '404.title': '404 - Page Not Found',
+    '404.subtitle': 'Oops! The page you are looking for does not exist.',
+    '404.description': 'The page you requested could not be found. It might have been moved, deleted, or you entered the wrong URL.',
+    '404.suggestions': 'Here are some helpful links:',
+    '404.goHome': 'Go to Homepage',
+    '404.goBack': 'Go Back',
+    '404.contact': 'Contact Support',
+    '404.search': 'Search our site',
+    '404.searchPlaceholder': 'Search for pages...',
   },
   ar: {
     // Navigation
@@ -208,5 +226,23 @@ export const translations = {
     'footer.contact.short': 'معلومات التواصل',
     'footer.social': 'تابعنا',
     'footer.rights': '© 2024 كوين تك. جميع الحقوق محفوظة.',
+    'footer.company.desc': 'كوين تك شركة برمجيات متخصصة في تطوير المواقع والتطبيقات والحلول المخصصة',
+    'footer.services.mobile': 'تطبيقات الهاتف المحمول',
+    'footer.services.desktop': 'تطبيقات سطح المكتب',
+    'footer.services.websites': 'المواقع الإلكترونية',
+    'footer.services.design': 'تصميم واجهات المستخدم',
+    'footer.contact.title': 'تواصل معنا',
+    'footer.contact.location': 'طنطا، مصر',
+    
+    // 404 Error Page
+    '404.title': '404 - الصفحة غير موجودة',
+    '404.subtitle': 'عذراً! الصفحة التي تبحث عنها غير موجودة.',
+    '404.description': 'لا يمكن العثور على الصفحة المطلوبة. ربما تم نقلها أو حذفها، أو أدخلت رابطاً خاطئاً.',
+    '404.suggestions': 'إليك بعض الروابط المفيدة:',
+    '404.goHome': 'العودة للصفحة الرئيسية',
+    '404.goBack': 'العودة للخلف',
+    '404.contact': 'تواصل مع الدعم',
+    '404.search': 'ابحث في موقعنا',
+    '404.searchPlaceholder': 'ابحث عن الصفحات...',
   }
 };

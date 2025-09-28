@@ -1,0 +1,27 @@
+{
+  "contacts": {},
+  "orders": {},
+  "users": {},
+  "testimonials": {
+    "3f1b627b-41fe-4ae0-9926-a9da93d47d4a": {
+      "id": "3f1b627b-41fe-4ae0-9926-a9da93d47d4a",
+      "name": "أحمد الراشد",
+      "role": "الرئيس التنفيذي، تك كورب",
+      "text": "قدمت كوين تك منصة تجارة إلكترونية استثنائية فاقت توقعاتنا. فريقهم محترف وماهر جداً.",
+      "rating": "5",
+      "imageUrl": null,
+      "isActive": "true",
+      "createdAt": "2025-09-26T14:14:53.763Z"
+    },
+    "63d940c1-2b20-4d71-91d3-0f7db3f3d60e": {
+      "id": "63d940c1-2b20-4d71-91d3-0f7db3f3d60e",
+      "name": "Sarah Johnson",
+      "role": "Product Manager, EduTech",
+      "text": "The educational platform they built for us has transformed how we deliver online courses. Excellent work!",
+      "rating": "5",
+      "imageUrl": null,
+      "isActive": "true",
+      "createdAt": "2025-09-26T14:14:53.763Z"
+    }
+  }
+}

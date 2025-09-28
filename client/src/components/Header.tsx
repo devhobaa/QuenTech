@@ -19,23 +19,27 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
       <nav className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+        <div className={`flex items-center justify-between ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
           {/* Logo */}
           <div 
-            className="flex items-center space-x-2 cursor-pointer hover-elevate rounded-lg px-3 py-2"
+            className={`flex items-center cursor-pointer hover-elevate rounded-lg px-3 py-2 ${
+              language === 'ar' ? 'space-x-reverse space-x-2' : 'space-x-2'
+            }`}
             onClick={() => onNavigate('home')}
             data-testid="link-home"
           >
-            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
+            <div className="text-2xl font-bold text-primary">
               <i className="fas fa-code"></i>
             </div>
             <span className="text-xl font-bold text-foreground">QuenTech</span>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className={`hidden md:flex items-center ${
+            language === 'ar' ? 'space-x-reverse space-x-8' : 'space-x-8'
+          }`}>
             {navigationItems.map((item) => (
               <button
                 key={item.key}
@@ -49,20 +53,33 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
               </button>
             ))}
             
-            <Button 
-              onClick={() => onNavigate('order')} 
-              className="bg-gradient-to-r from-primary to-chart-2 hover:from-primary/90 hover:to-chart-2/90"
-              data-testid="button-order"
+        <Button
+          onClick={() => onNavigate('order')}
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
+          data-testid="button-contact"
+        >
+          {language === 'ar' ? 'اعمل طلبك الآن' : 'Order Now'}
+        </Button>
+
+            {/* Admin Link - Hidden */}
+            {/* <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onNavigate('admin')}
+              className="text-muted-foreground hover:text-primary"
+              data-testid="button-admin"
             >
-              {t('nav.order')}
-            </Button>
+              <i className="fas fa-cog text-sm"></i>
+            </Button> */}
 
             {/* Language Toggle */}
             <Button
               variant="outline"
               size="sm"
               onClick={toggleLanguage}
-              className="flex items-center space-x-2"
+              className={`flex items-center ${
+                language === 'ar' ? 'space-x-reverse space-x-2' : 'space-x-2'
+              }`}
               data-testid="button-language-toggle"
             >
               <i className="fas fa-globe text-sm"></i>
@@ -71,7 +88,9 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className={`md:hidden flex items-center ${
+            language === 'ar' ? 'space-x-reverse space-x-2' : 'space-x-2'
+          }`}>
             <Button
               variant="outline"
               size="sm"
@@ -102,7 +121,9 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
                     onNavigate(item.key);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`text-left text-sm font-medium transition-colors hover:text-primary p-2 rounded ${
+                  className={`text-sm font-medium transition-colors hover:text-primary p-2 rounded ${
+                    language === 'ar' ? 'text-right' : 'text-left'
+                  } ${
                     currentPage === item.key ? 'text-primary bg-primary/5' : 'text-muted-foreground'
                   }`}
                   data-testid={`link-mobile-${item.key}`}

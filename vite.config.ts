@@ -27,11 +27,31 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        // Ensure unique file names for cache busting
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    },
+    // Force rebuild by disabling cache
+    cache: false,
+    // Add build timestamp and version
+    define: {
+      __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+      __BUILD_VERSION__: JSON.stringify(Date.now().toString())
+    },
+    // Generate manifest for cache busting
+    manifest: true,
+    // Source maps for debugging
+    sourcemap: false
   },
   server: {
     fs: {
       strict: true,
       deny: ["**/.*"],
     },
+    historyApiFallback: true,
   },
 });

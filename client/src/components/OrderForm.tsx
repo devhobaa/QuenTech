@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -26,9 +26,10 @@ type OrderFormData = z.infer<typeof orderSchema>;
 
 interface OrderFormProps {
   onNavigate: (page: string) => void;
+  selectedServiceType?: string;
 }
 
-export function OrderForm({ onNavigate }: OrderFormProps) {
+export function OrderForm({ onNavigate, selectedServiceType }: OrderFormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -40,11 +41,19 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
       name: '',
       email: '',
       phone: '',
-      serviceType: '',
+      serviceType: selectedServiceType || '',
       description: '',
       fileUrl: '',
     },
   });
+
+  // Update form when selectedServiceType changes
+  useEffect(() => {
+    if (selectedServiceType) {
+      console.log('Setting service type:', selectedServiceType);
+      form.setValue('serviceType', selectedServiceType);
+    }
+  }, [selectedServiceType, form]);
 
   const serviceOptions = [
     { value: 'web-development', label: t('services.web.title') },
@@ -57,10 +66,27 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
 
   const submitOrderMutation = useMutation({
     mutationFn: async (data: OrderFormData) => {
-      return apiRequest('/api/orders', {
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('email', data.email);
+      formData.append('phone', data.phone);
+      formData.append('serviceType', data.serviceType);
+      formData.append('description', data.description);
+      
+      if (uploadedFile) {
+        formData.append('file', uploadedFile);
+      }
+      
+      const response = await fetch('/api/order', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: formData,
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit order');
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -84,9 +110,7 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
     const file = event.target.files?.[0];
     if (file) {
       setUploadedFile(file);
-      // TODO: remove mock functionality - implement actual file upload to storage
       console.log('File selected:', file.name);
-      form.setValue('fileUrl', `uploaded/${file.name}`);
     }
   };
 
@@ -96,43 +120,43 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
   };
 
   return (
-    <section className=\"py-20 bg-background min-h-screen\">
-      <div className=\"container mx-auto px-4\">
-        <div className=\"max-w-3xl mx-auto\">
+    <section className="py-20 bg-background min-h-screen">
+      <div className="container mx-auto px-4">
+        <div className="max-w-3xl mx-auto">
           {/* Section Header */}
-          <div className=\"text-center mb-12\" data-aos=\"fade-up\">
-            <h1 className=\"text-3xl md:text-4xl font-bold text-foreground mb-4\">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {t('order.title')}
             </h1>
-            <p className=\"text-lg text-muted-foreground\">
+            <p className="text-lg text-muted-foreground">
               {t('order.subtitle')}
             </p>
           </div>
 
           {/* Order Form */}
-          <Card className=\"border-border shadow-lg\" data-aos=\"fade-up\" data-aos-delay=\"200\">
+          <Card className="border-border shadow-lg">
             <CardHeader>
-              <CardTitle className=\"text-center text-xl text-foreground\">
-                <i className=\"fas fa-shopping-cart mr-2 text-primary\"></i>
+              <CardTitle className="text-center text-xl text-foreground">
+                <i className="fas fa-shopping-cart mr-2 text-primary"></i>
                 {t('order.title')}
               </CardTitle>
             </CardHeader>
-            <CardContent className=\"p-8\">
+            <CardContent className="p-8">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className=\"space-y-6\">
-                  <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6\">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Name Field */}
                     <FormField
                       control={form.control}
-                      name=\"name\"
+                      name="name"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('contact.name')}</FormLabel>
                           <FormControl>
                             <Input 
                               {...field} 
-                              className=\"border-input\"
-                              data-testid=\"input-order-name\"
+                              className="border-input"
+                              data-testid="input-order-name"
                             />
                           </FormControl>
                           <FormMessage />
@@ -143,16 +167,16 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
                     {/* Email Field */}
                     <FormField
                       control={form.control}
-                      name=\"email\"
+                      name="email"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('contact.email')}</FormLabel>
                           <FormControl>
                             <Input 
                               {...field} 
-                              type=\"email\"
-                              className=\"border-input\"
-                              data-testid=\"input-order-email\"
+                              type="email"
+                              className="border-input"
+                              data-testid="input-order-email"
                             />
                           </FormControl>
                           <FormMessage />
@@ -161,20 +185,20 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
                     />
                   </div>
 
-                  <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6\">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Phone Field */}
                     <FormField
                       control={form.control}
-                      name=\"phone\"
+                      name="phone"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('contact.phone')}</FormLabel>
                           <FormControl>
                             <Input 
                               {...field} 
-                              type=\"tel\"
-                              className=\"border-input\"
-                              data-testid=\"input-order-phone\"
+                              type="tel"
+                              className="border-input"
+                              data-testid="input-order-phone"
                             />
                           </FormControl>
                           <FormMessage />
@@ -185,13 +209,13 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
                     {/* Service Type Field */}
                     <FormField
                       control={form.control}
-                      name=\"serviceType\"
+                      name="serviceType"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('order.service')}</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger className=\"border-input\" data-testid=\"select-order-service\">
+                              <SelectTrigger className="border-input" data-testid="select-order-service">
                                 <SelectValue placeholder={t('order.service.placeholder')} />
                               </SelectTrigger>
                             </FormControl>
@@ -212,7 +236,7 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
                   {/* Description Field */}
                   <FormField
                     control={form.control}
-                    name=\"description\"
+                    name="description"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('order.description')}</FormLabel>
@@ -221,8 +245,8 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
                             {...field} 
                             rows={6}
                             placeholder={t('order.description.placeholder')}
-                            className=\"border-input resize-none\"
-                            data-testid=\"textarea-order-description\"
+                            className="border-input resize-none"
+                            data-testid="textarea-order-description"
                           />
                         </FormControl>
                         <FormMessage />
@@ -231,33 +255,33 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
                   />
 
                   {/* File Upload */}
-                  <div className=\"space-y-2\">
-                    <label className=\"text-sm font-medium text-foreground\">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">
                       {t('order.file')}
                     </label>
-                    <div className=\"border-2 border-dashed border-input rounded-lg p-6 text-center hover:border-primary/50 transition-colors\">
+                    <div className="border-2 border-dashed border-input rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
                       <input
-                        type=\"file\"
+                        type="file"
                         onChange={handleFileUpload}
-                        accept=\".pdf,.doc,.docx,.txt,.zip,.rar\"
-                        className=\"hidden\"
-                        id=\"file-upload\"
-                        data-testid=\"input-order-file\"
+                        accept=".pdf,.doc,.docx,.txt,.zip,.rar"
+                        className="hidden"
+                        id="file-upload"
+                        data-testid="input-order-file"
                       />
-                      <label htmlFor=\"file-upload\" className=\"cursor-pointer\">
-                        <div className=\"space-y-2\">
-                          <i className=\"fas fa-cloud-upload-alt text-3xl text-muted-foreground\"></i>
-                          <p className=\"text-sm text-muted-foreground\">
+                      <label htmlFor="file-upload" className="cursor-pointer">
+                        <div className="space-y-2">
+                          <i className="fas fa-cloud-upload-alt text-3xl text-muted-foreground"></i>
+                          <p className="text-sm text-muted-foreground">
                             {uploadedFile ? (
-                              <span className=\"text-primary font-medium\">
-                                <i className=\"fas fa-check mr-1\"></i>
+                              <span className="text-primary font-medium">
+                                <i className="fas fa-check mr-1"></i>
                                 {uploadedFile.name}
                               </span>
                             ) : (
                               'Click to upload files or drag and drop'
                             )}
                           </p>
-                          <p className=\"text-xs text-muted-foreground\">
+                          <p className="text-xs text-muted-foreground">
                             PDF, DOC, TXT, ZIP files (Max 10MB)
                           </p>
                         </div>
@@ -267,19 +291,19 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
 
                   {/* Submit Button */}
                   <Button
-                    type=\"submit\"
-                    className=\"w-full bg-gradient-to-r from-primary to-chart-2 hover:from-primary/90 hover:to-chart-2/90 font-semibold py-3 text-lg\"
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-primary to-chart-2 hover:from-primary/90 hover:to-chart-2/90 font-semibold py-3 text-lg"
                     disabled={submitOrderMutation.isPending}
-                    data-testid=\"button-order-submit\"
+                    data-testid="button-order-submit"
                   >
                     {submitOrderMutation.isPending ? (
                       <>
-                        <i className=\"fas fa-spinner fa-spin mr-2\"></i>
+                        <i className="fas fa-spinner fa-spin mr-2"></i>
                         {t('order.submitting') || 'Submitting...'}
                       </>
                     ) : (
                       <>
-                        <i className=\"fas fa-rocket mr-2\"></i>
+                        <i className="fas fa-rocket mr-2"></i>
                         {t('order.submit')}
                       </>
                     )}
@@ -288,13 +312,13 @@ export function OrderForm({ onNavigate }: OrderFormProps) {
               </Form>
 
               {/* Back to Home */}
-              <div className=\"mt-6 text-center\">
+              <div className="mt-6 text-center">
                 <Button
-                  variant=\"outline\"
+                  variant="outline"
                   onClick={() => onNavigate('home')}
-                  data-testid=\"button-back-home\"
+                  data-testid="button-back-home"
                 >
-                  <i className=\"fas fa-arrow-left mr-2\"></i>
+                  <i className="fas fa-arrow-left mr-2"></i>
                   {t('nav.home')}
                 </Button>
               </div>
