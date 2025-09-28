@@ -1,0 +1,63 @@
+name: Force Deploy - Clear All Caches
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force rebuild and clear all caches'
+        required: false
+        default: 'true'
+        type: boolean
+
+jobs:
+  force-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Clear ALL caches
+        run: |
+          echo "Clearing all caches..."
+          rm -rf dist/
+          rm -rf node_modules/.cache/
+          rm -rf .vite/
+          rm -rf .next/
+          rm -rf build/
+          rm -rf public/
+          echo "All caches cleared!"
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Force rebuild
+        run: |
+          echo "Building with force..."
+          npm run build
+          echo "Build completed!"
+          
+      - name: Create .nojekyll
+        run: |
+          touch dist/public/.nojekyll
+          echo "Created .nojekyll file"
+          
+      - name: List built files
+        run: |
+          echo "Built files:"
+          ls -la dist/public/
+          echo "Assets:"
+          ls -la dist/public/assets/ || echo "No assets folder"
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/public
+          cname: # Leave empty for default GitHub Pages domain
+          force_orphan: true

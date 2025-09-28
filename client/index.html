@@ -12,6 +12,15 @@
     <meta http-equiv="Expires" content="0" />
     <meta name="version" content="<%= new Date().getTime() %>" />
     <meta name="build-time" content="<%= new Date().toISOString() %>" />
+    <meta name="cache-buster" content="<%= Math.random().toString(36).substr(2, 9) %>" />
+    
+    <!-- Force reload script -->
+    <script>
+      // Force reload if cached
+      if (performance.navigation.type === 1) {
+        window.location.reload(true);
+      }
+    </script>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
